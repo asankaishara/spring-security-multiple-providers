@@ -1,0 +1,42 @@
+<beans:beans
+		xmlns="http://www.springframework.org/schema/security"
+		xmlns:beans="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+
+	<http name="forWeb" auto-config="true" pattern="/endpoint/web/**" create-session="stateless">
+		<intercept-url pattern="/endpoint/web/private/**" access="isAuthenticated()" />
+		<intercept-url pattern="/endpoint/web/public/**" access="permitAll()" />
+	</http>
+
+	<http name="forRest" auto-config="true" pattern="/endpoint/rest/**" create-session="stateless">
+		<intercept-url pattern="/endpoint/rest/private/**" access="isAuthenticated()" />
+		<intercept-url pattern="/endpoint/rest/public/**" access="permitAll()" />
+		<custom-filter before="BASIC_AUTH_FILTER" ref="apiKeyAuthenticationFilter" />
+	</http>
+
+	<beans:bean id="apiKeyAuthenticationFilter" class="org.ai.security.ApiKeyAuthenticationFilter">
+		<beans:constructor-arg ref="apiKeyAuthManager"/>
+	</beans:bean>
+
+	<authentication-manager alias="webAuthManager">
+		<authentication-provider>
+			<user-service>
+				<user name="ishara" password="{noop}Password1234" authorities="ROLE_USER" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+
+	<authentication-manager alias="apiKeyAuthManager">
+		<authentication-provider ref="apiKeyAuthenticationProvider" />
+	</authentication-manager>
+
+	<context:component-scan base-package="org.ai"/>
+
+</beans:beans>
