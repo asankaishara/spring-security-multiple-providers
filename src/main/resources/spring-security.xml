@@ -13,6 +13,11 @@
 	<http name="forWeb" auto-config="true" pattern="/endpoint/web/**" create-session="stateless">
 		<intercept-url pattern="/endpoint/web/private/**" access="isAuthenticated()" />
 		<intercept-url pattern="/endpoint/web/public/**" access="permitAll()" />
+		<form-login
+				login-page='/login'
+				login-processing-url="/perform_login"
+				authentication-failure-url="/login.html?error=true"/>
+		<custom-filter before="BASIC_AUTH_FILTER" ref="loginFormAuthenticationFilter" />
 	</http>
 
 	<http name="forRest" auto-config="true" pattern="/endpoint/rest/**" create-session="stateless">
@@ -25,10 +30,14 @@
 		<beans:constructor-arg ref="apiKeyAuthManager"/>
 	</beans:bean>
 
+	<beans:bean id="loginFormAuthenticationFilter" class="org.ai.security.LoginFormAuthenticationFilter">
+		<beans:property name="authenticationManager" ref="webAuthManager"/>
+	</beans:bean>
+
 	<authentication-manager alias="webAuthManager">
 		<authentication-provider>
 			<user-service>
-				<user name="ishara" password="{noop}Password1234" authorities="ROLE_USER" />
+				<user name="ishara" password="1234" authorities="ROLE_USER" />
 			</user-service>
 		</authentication-provider>
 	</authentication-manager>
