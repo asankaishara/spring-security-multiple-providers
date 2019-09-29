@@ -22,8 +22,7 @@ This example will show you how to use multiple authentication providers with spr
 
 - Refer the spring-security.xml for multiple auth providers configuration
 - to access ``localhost:8080/endpoint/rest/private/api-key`` you need to set api key with value as 'abc' in the header
-- to access ``http://localhost:8080/endpoint/web/private/basic`` you must login with username: 'ishara' and password '1234'
-this authentication having some issue and will be fixed later.
+- to access ``http://localhost:8080/endpoint/web/private/basic`` you must login with username: 'ishara' and password '1234'.
  	
  	
     
